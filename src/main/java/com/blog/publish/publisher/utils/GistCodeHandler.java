@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.util.Map;
 
@@ -31,10 +32,10 @@ public class GistCodeHandler {
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonStr = mapper.writeValueAsString( gistCodData );
 
-		HttpRequest request = HttpRequest.newBuilder( URI.create( "https://api.github.com/gists" ) )
-				.header( "Accept", "application/vnd.github+json" )
-				.header( "Authorization", "Bearer " + Token.getGithubToken() )
-				.POST( HttpRequest.BodyPublishers.ofString( jsonStr ) ).build();
+		HttpRequest request = getCommonHeaderRequestBuilder()
+				.uri( URI.create( "https://api.github.com/gists" ) )
+				.POST( HttpRequest.BodyPublishers.ofString( jsonStr ) )
+				.build();
 
 		HttpClient client = HttpClient.newHttpClient();
 		HttpResponse<String> response = client.send( request, HttpResponse.BodyHandlers.ofString() );
@@ -52,4 +53,28 @@ public class GistCodeHandler {
 		return responseMap.get( "html_url" );
 	}
 
+	public static void deleteGist( String id ) throws IOException, InterruptedException {
+		HttpRequest request = getCommonHeaderRequestBuilder()
+				.uri( URI.create( "https://api.github.com/gists/"+id )  )
+				.DELETE()
+				.build();
+		
+		HttpClient client = HttpClient.newHttpClient();
+		HttpResponse<String> response = client.send( request, HttpResponse.BodyHandlers.ofString() );
+		
+		if ( response.statusCode() != 204 ) 
+		{
+			logger.error( "response.statusCode() = " + response.statusCode() );
+			logger.error( response.body() );
+		}
+		
+		logger.info( "Gist with id #" + id + " has been deleted successfully" );
+	}
+
+	private static Builder getCommonHeaderRequestBuilder() 
+	{
+		return HttpRequest.newBuilder().header( "Accept", "application/vnd.github+json" )
+		.header( "Authorization", "Bearer " + Token.getGithubToken() );
+	} 
+	
 }
