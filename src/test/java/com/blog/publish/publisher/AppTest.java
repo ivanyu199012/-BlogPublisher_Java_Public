@@ -24,8 +24,8 @@ public class AppTest {
 	@Test
 	public void test_GistCodeHandler_uploadCodeBlockToGist() throws IOException, InterruptedException
 	{
-		String htmlUrl = GistCodeHandler.uploadCodeBlockToGist("Hello World!");
-		assertEquals(htmlUrl, null);
+		String htmlUrl = GistCodeHandler.uploadCodeBlockToGist( "Hello World Description", "helloWorld.txt", "Hello World !!" );
+		assertTrue( htmlUrl.contains( "https://gist.github.com/" ) );
 	}
 
 }

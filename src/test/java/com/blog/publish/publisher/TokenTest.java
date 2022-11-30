@@ -16,7 +16,6 @@ public class TokenTest {
 	public void test_getGithubToken()
 	{
 		String token = Token.getGithubToken();
-		logger.info("token = " + token);
 		assertTrue(token.contains("ghp_"));
 	}
 }
