@@ -1,9 +1,13 @@
 package com.blog.publish.publisher;
 
-import java.util.List;
+import java.io.Serializable;
 
-public class BlogInfo
+public class BlogInfo implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8812812866344618999L;
 	public enum SITE {
 		DEVTO, MEDIUM, ALL
 	};

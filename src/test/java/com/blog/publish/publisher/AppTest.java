@@ -3,6 +3,7 @@ package com.blog.publish.publisher;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import org.apache.commons.cli.CommandLine;
@@ -10,6 +11,7 @@ import org.apache.commons.cli.ParseException;
 import org.junit.Test;
 
 import com.blog.publish.publisher.BlogInfo.SITE;
+import com.blog.publish.publisher.utils.FileHandler;
 
 /**
  * Unit test for simple App.
@@ -45,7 +47,7 @@ public class AppTest
 	}
 	
 	@Test
-	public void test_getBlogInfoFrom() throws ParseException
+	public void test_getBlogInfoFrom() throws ParseException, IOException
 	{
 		String[] args = {
 				"C:\\MyFiles\\Git\\3. Blog\\blog\\5. Django_background_task.md",
@@ -72,5 +74,7 @@ public class AppTest
 		assertTrue( Arrays.asList( blogInfo.getSites() ).containsAll( Arrays.asList( sites ) ) );
 		assertTrue( Arrays.asList( blogInfo.getTags() ).containsAll( Arrays.asList( cmd.getOptionValue( "tags" ).split( "," ) ) ) );
 		assertEquals( blogInfo.getImageUrl(), cmd.getOptionValue( "imageUrl" ) );
+		
+		FileHandler.writeObjectToFile( blogInfo, "temp/blogInfo.txt" );
 	}
 }

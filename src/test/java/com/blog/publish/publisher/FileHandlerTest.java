@@ -1,5 +1,6 @@
 package com.blog.publish.publisher;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -22,5 +23,12 @@ public class FileHandlerTest {
 		String path = "C:\\MyFiles\\Git\\3. Blog\\blog\\5. Django_background_task.md";
 		String content = FileHandler.readFile( path );
 		assertTrue( content.contains( "# 1. Introduction & Proof-Of-Concept" ) );
+	}
+	
+	@Test
+	public void test_readFileToObject() throws ClassNotFoundException, IOException 
+	{
+		BlogInfo blogInfo = (BlogInfo) FileHandler.readFileToObject( "temp/blogInfo.txt" );
+		assertEquals( blogInfo.getTitle(), "A simple approach for background task in Django" ); 
 	}
 }
