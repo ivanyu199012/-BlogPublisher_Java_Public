@@ -16,7 +16,7 @@
 				onMatch="ACCEPT" onMismatch="DENY" />
 			<PatternLayout pattern="${LOG_PATTERN}" />
 			<Policies>
-				<TimeBasedTriggeringPolicy filePattern="${LOG_DIR}/app-%d{yyyy-MM-dd}-%i.log" />
+				<TimeBasedTriggeringPolicy interval="1" />
 			</Policies>
 			<DefaultRolloverStrategy max="10" />
 		</RollingFile>
