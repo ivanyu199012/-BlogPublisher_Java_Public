@@ -25,7 +25,7 @@ public class DevToUploader
 		return markdown.replace( "# ", "## " );
 	}
 	
-	public static Map<String, Object> prepareReqDataDict( BlogInfo blogInfo, String markdown )
+	public static Map<String, Object> prepareArticleMap( BlogInfo blogInfo, String markdown )
 	{
 		Map< String, Object > reqDataMap = new HashMap<>();
 		reqDataMap.put( "title", blogInfo.getTitle() );
@@ -42,20 +42,21 @@ public class DevToUploader
 		if ( blogInfo.getTags() != null && blogInfo.getTags().length > 0 ) 
 		{
 			String[] tags = Arrays.stream( blogInfo.getTags() ).map( tag -> tag.replace( " ", "" ) ).toArray( String[]::new );
-			reqDataMap.put( markdown, tags );
+			reqDataMap.put( "tags", tags );
 		}
 		
-		return reqDataMap;
+		return Map.of( "article", reqDataMap );
 	}
 	
-	public static String postArticle(Map<String, Object> reqDataMap) throws IOException, InterruptedException
+	public static String postArticle(Map<String, Object> articleMap) throws IOException, InterruptedException
 	{
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonStr = mapper.writeValueAsString( reqDataMap );
+		String jsonStr = mapper.writerWithDefaultPrettyPrinter().writeValueAsString( articleMap );
 		
 		HttpRequest request = HttpRequest.newBuilder( URI.create( "https://dev.to/api/articles" ) )
 			.header( "Content-Type", "application/json" )
 			.header( "api-key", Token.getDevToApiKey() )
+			.header( "User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0" )
 			.POST( HttpRequest.BodyPublishers.ofString( jsonStr ) )
 			.build();
 		
@@ -65,7 +66,7 @@ public class DevToUploader
 		if ( response.statusCode() != 201 ) 
 		{
 			logger.error( "response.statusCode() = " + response.statusCode() );
-			logger.error( response.body() );
+			logger.error( response );
 			return null;
 		}
 		
