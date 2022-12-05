@@ -37,4 +37,9 @@ public class Token {
 	{
 		return prop.getProperty("DEV_TO_TOKEN");
 	}
+	
+	public static String getMediumToken()
+	{
+		return prop.getProperty("MEDIUM_TOKEN");
+	}
 }
