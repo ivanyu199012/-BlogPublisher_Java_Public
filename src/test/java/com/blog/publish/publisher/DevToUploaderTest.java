@@ -21,7 +21,7 @@ public class DevToUploaderTest
 	public void test_formatMarkdownText() throws IOException
 	{
 		String markdown = FileHandler
-				.readFile( "C:\\Ivan\\Git\\17. EclipseWorkspace\\publisher\\temp\\5. Django_background_task.md" );
+				.readFile( "temp\\5. Django_background_task.md" );
 		markdown = DevToUploader.formatMarkdownText( markdown );
 		assertTrue( markdown.contains( "## 1. Introduction & Proof-Of-Concept" ) );
 	}
@@ -30,7 +30,7 @@ public class DevToUploaderTest
 	public void test_prepareReqDataDict() throws IOException, ClassNotFoundException
 	{
 		String markdown = FileHandler
-				.readFile( "C:\\Ivan\\Git\\17. EclipseWorkspace\\publisher\\temp\\5. Django_background_task.md" );
+				.readFile( "temp\\5. Django_background_task.md" );
 		BlogInfo blogInfo = ( BlogInfo ) FileHandler.readFileToObject( "temp/blogInfo.txt" );
 		Map<String, Object> articleMap = DevToUploader.prepareArticleMap( blogInfo, markdown );
 		assertTrue( articleMap.containsKey( "article" ) );
@@ -46,7 +46,7 @@ public class DevToUploaderTest
 	public void test_postArticle() throws IOException, ClassNotFoundException, InterruptedException
 	{
 		String markdown = FileHandler
-				.readFile( "C:\\Ivan\\Git\\17. EclipseWorkspace\\publisher\\temp\\5. Django_background_task.md" );
+				.readFile( "temp\\5. Django_background_task.md" );
 		markdown = DevToUploader.formatMarkdownText( markdown );
 		
 		BlogInfo blogInfo = ( BlogInfo ) FileHandler.readFileToObject( "temp/blogInfo.txt" );

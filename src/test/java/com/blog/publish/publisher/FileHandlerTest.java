@@ -20,7 +20,7 @@ public class FileHandlerTest {
 	@Test
 	public void test_readFile() throws IOException
 	{
-		String path = "C:\\Ivan\\Git\\17. EclipseWorkspace\\publisher\\temp\\5. Django_background_task.md";
+		String path = "temp\\5. Django_background_task.md";
 		String content = FileHandler.readFile( path );
 		assertTrue( content.contains( "# 1. Introduction & Proof-Of-Concept" ) );
 	}
