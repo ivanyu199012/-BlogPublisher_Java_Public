@@ -42,4 +42,20 @@ public class GistCodeHandlerTest
 		assertTrue( ( ( Map< String, String > ) resultMap.get( GistCodeHandler.ID_TO_CODE_BLOCK_MAP_KEY ) ).size() == 6 );
 		assertTrue( ! ( ( Map< String, String > ) resultMap.get( GistCodeHandler.ID_TO_CODE_BLOCK_MAP_KEY ) ).get( "_@_5_Django_background_task.md_code_5_@_" ).contains( "```" ) );
 	}
+
+	@Test
+	public void test_convertBlogCodeToGist() throws IOException, InterruptedException
+	{
+		String markdown = FileHandler.readFile( "temp\\5. Django_background_task.md" );
+		Map< String, Object > resultMap = GistCodeHandler.convertBlogCodeToGist( "5_Django_background_task.md", markdown );
+		assertTrue( resultMap.containsKey( GistCodeHandler.TEMP_MARKDOWN_KEY ) );
+		assertTrue( !( ( String ) resultMap.get( GistCodeHandler.TEMP_MARKDOWN_KEY ) ).contains( "```" ) );
+
+		assertTrue( resultMap.containsKey( GistCodeHandler.ID_TO_GIST_LINK_MAP_KEY ) );
+		Map< String, String > idToGistLinkMap = ( Map< String, String > ) resultMap.get( GistCodeHandler.ID_TO_GIST_LINK_MAP_KEY );
+		assertTrue( ( ( Map< String, String > ) resultMap.get( GistCodeHandler.ID_TO_GIST_LINK_MAP_KEY ) ).size() == 6 );
+		idToGistLinkMap.forEach( ( id, gistLink ) -> {
+			assertTrue( gistLink.contains( "https://gist.github.com/" ) );
+		} );
+	}
 }

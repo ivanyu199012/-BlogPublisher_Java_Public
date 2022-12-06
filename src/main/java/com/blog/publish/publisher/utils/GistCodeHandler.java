@@ -30,6 +30,31 @@ public class GistCodeHandler
 	);
 	public static final String TEMP_MARKDOWN_KEY = "TEMP_MARKDOWN_KEY";
 	public static final String ID_TO_CODE_BLOCK_MAP_KEY = "ID_TO_CODE_BLOCK_MAP_KEY";
+	public static final String ID_TO_GIST_LINK_MAP_KEY = "ID_TO_CODE_BLOCK_MAP_KEY";
+
+	public static Map<String, Object> convertBlogCodeToGist( String fileBaseName, String markdownText ) throws IOException, InterruptedException
+	{
+
+		Map< String, Object > resultMap = GistCodeHandler.convertCodeBlockToId( fileBaseName,markdownText );
+		String tempMarkdownText = ( String ) resultMap.get( TEMP_MARKDOWN_KEY );
+		Map< String, String > idToCodeBlockMap = ( Map< String, String > ) resultMap.get( ID_TO_CODE_BLOCK_MAP_KEY );
+
+		Map< String, String > idToGistLinkMap = new HashMap<>();
+		for ( Map.Entry<String,String> entry : idToCodeBlockMap.entrySet() )
+		{
+			String id = entry.getKey();
+			String codeBlock = entry.getValue();
+
+			String filename = id.replaceAll( DELIMITER, "" );
+			String htmlUrl = uploadCodeBlockToGist( filename, filename, codeBlock );
+			idToGistLinkMap.put( id, htmlUrl );
+		}
+
+		resultMap = Map.of();
+		resultMap.put( TEMP_MARKDOWN_KEY, tempMarkdownText );
+		resultMap.put( ID_TO_GIST_LINK_MAP_KEY, idToGistLinkMap );
+		return resultMap;
+	}
 
 	public static Map<String, Object> convertCodeBlockToId( String fileBaseName, String markdownText )
 	{
