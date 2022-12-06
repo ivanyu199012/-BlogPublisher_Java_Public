@@ -3,6 +3,7 @@ package com.blog.publish.publisher;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +34,12 @@ public class GistCodeHandlerTest
 	public void test_convertCodeBlockToId() throws IOException
 	{
 		String markdown = FileHandler.readFile( "temp\\5. Django_background_task.md" );
-		GistCodeHandler.convertCodeBlockToId( "5_Django_background_task.md", markdown );
+		Map< String, Object > resultMap = GistCodeHandler.convertCodeBlockToId( "5_Django_background_task.md",markdown );
+		assertTrue( resultMap.containsKey( GistCodeHandler.TEMP_MARKDOWN_KEY ) );
+		assertTrue( !( ( String ) resultMap.get( GistCodeHandler.TEMP_MARKDOWN_KEY ) ).contains( "```" ) );
+
+		assertTrue( resultMap.containsKey( GistCodeHandler.ID_TO_CODE_BLOCK_MAP_KEY ) );
+		assertTrue( ( ( Map< String, String > ) resultMap.get( GistCodeHandler.ID_TO_CODE_BLOCK_MAP_KEY ) ).size() == 6 );
+		assertTrue( ! ( ( Map< String, String > ) resultMap.get( GistCodeHandler.ID_TO_CODE_BLOCK_MAP_KEY ) ).get( "_@_5_Django_background_task.md_code_5_@_" ).contains( "```" ) );
 	}
 }

@@ -7,6 +7,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -27,18 +28,21 @@ public class GistCodeHandler
 		new AbstractMap.SimpleEntry<String, String>( "python", "py" ),
 		new AbstractMap.SimpleEntry<String, String>( "javascript", "js" )
 	);
+	public static final String TEMP_MARKDOWN_KEY = "TEMP_MARKDOWN_KEY";
+	public static final String ID_TO_CODE_BLOCK_MAP_KEY = "ID_TO_CODE_BLOCK_MAP_KEY";
 
 	public static Map<String, Object> convertCodeBlockToId( String fileBaseName, String markdownText )
 	{
 		String[] codeBlockArr = Pattern.compile( "```[\\s\\S][^```]+```" ).matcher( markdownText ).results().map( MatchResult::group ).toArray(String[]::new);
-		
+
 		String tempMarkdownText = markdownText;
-		for( int index = 0; index < codeBlockArr.length; index++ ) 
+		Map<String, String> idToCodeBlockMap = new HashMap<>();
+		for( int index = 0; index < codeBlockArr.length; index++ )
 		{
 			String codeBlock = codeBlockArr[ index ];
 			String id = DELIMITER + fileBaseName + "_code_" + index + DELIMITER;
 			tempMarkdownText = tempMarkdownText.replace( codeBlock, id );
-			
+
 			String language = null;
 			Matcher codeBlockPrefixMatcher = Pattern.compile( "```(.*)\\R" ).matcher( codeBlock );
 			if( codeBlockPrefixMatcher.find() )
@@ -46,14 +50,18 @@ public class GistCodeHandler
 				language = codeBlockPrefixMatcher.group( 1 );
 				logger.info( "Code Block #" + id +" = " + language );
 			}
-			else 
+			else
 			{
 				logger.info( "Code Block #" + id + " has no language" );
 			}
-			
+
+			codeBlock = codeBlock.replaceAll( "```.*\\R", "" ).replaceAll( "```", "" );
+			idToCodeBlockMap.put( id, codeBlock );
 		}
 
-		Map<String, Object> resultMap = null;
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put( TEMP_MARKDOWN_KEY, tempMarkdownText );
+		resultMap.put( ID_TO_CODE_BLOCK_MAP_KEY, idToCodeBlockMap );
 		return resultMap;
 	}
 
