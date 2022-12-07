@@ -29,7 +29,7 @@ public class GistCodeHandler
 		new AbstractMap.SimpleEntry<String, String>( "javascript", "js" )
 	);
 	public static final String TEMP_MARKDOWN_KEY = "TEMP_MARKDOWN_KEY";
-	public static final String ID_TO_CODE_BLOCK_MAP_KEY = "ID_TO_CODE_BLOCK_MAP_KEY";
+	public static final String ID_TO_CODE_BLOCK_INFO_MAP_KEY = "ID_TO_CODE_BLOCK_INFO_MAP_KEY";
 	public static final String ID_TO_GIST_LINK_MAP_KEY = "ID_TO_CODE_BLOCK_MAP_KEY";
 
 	public static Map<String, Object> convertBlogCodeToGist( String fileBaseName, String markdownText ) throws IOException, InterruptedException
@@ -37,20 +37,27 @@ public class GistCodeHandler
 
 		Map< String, Object > resultMap = GistCodeHandler.convertCodeBlockToId( fileBaseName,markdownText );
 		String tempMarkdownText = ( String ) resultMap.get( TEMP_MARKDOWN_KEY );
-		Map< String, String > idToCodeBlockMap = ( Map< String, String > ) resultMap.get( ID_TO_CODE_BLOCK_MAP_KEY );
+		Map< String, CodeBlockInfo > idToCodeBlockMap = ( Map< String, CodeBlockInfo > ) resultMap.get( ID_TO_CODE_BLOCK_INFO_MAP_KEY );
 
 		Map< String, String > idToGistLinkMap = new HashMap<>();
-		for ( Map.Entry<String,String> entry : idToCodeBlockMap.entrySet() )
+		for ( Map.Entry<String,CodeBlockInfo> entry : idToCodeBlockMap.entrySet() )
 		{
 			String id = entry.getKey();
-			String codeBlock = entry.getValue();
+			CodeBlockInfo codeBlockInfo = entry.getValue();
 
-			String filename = id.replaceAll( DELIMITER, "" );
-			String htmlUrl = uploadCodeBlockToGist( filename, filename, codeBlock );
+			String filename = id.replaceAll( DELIMITER, "" ).replaceAll( ".md", "" );
+			String ext = "";
+			if ( codeBlockInfo.getLanguage() != null && LANG_2_EXT_MAP.containsKey( codeBlockInfo.getLanguage() ) )
+			{
+				ext = "." + LANG_2_EXT_MAP.get( codeBlockInfo.getLanguage() );
+			}
+
+			String filenameWithExt = filename + ext;
+			String htmlUrl = uploadCodeBlockToGist( filename, filenameWithExt, codeBlockInfo.getCodeBlock() );
 			idToGistLinkMap.put( id, htmlUrl );
 		}
 
-		resultMap = Map.of();
+		resultMap = new HashMap<>();
 		resultMap.put( TEMP_MARKDOWN_KEY, tempMarkdownText );
 		resultMap.put( ID_TO_GIST_LINK_MAP_KEY, idToGistLinkMap );
 		return resultMap;
@@ -61,7 +68,7 @@ public class GistCodeHandler
 		String[] codeBlockArr = Pattern.compile( "```[\\s\\S][^```]+```" ).matcher( markdownText ).results().map( MatchResult::group ).toArray(String[]::new);
 
 		String tempMarkdownText = markdownText;
-		Map<String, String> idToCodeBlockMap = new HashMap<>();
+		Map<String, CodeBlockInfo> idToCodeBlockInfoMap = new HashMap<>();
 		for( int index = 0; index < codeBlockArr.length; index++ )
 		{
 			String codeBlock = codeBlockArr[ index ];
@@ -81,12 +88,13 @@ public class GistCodeHandler
 			}
 
 			codeBlock = codeBlock.replaceAll( "```.*\\R", "" ).replaceAll( "```", "" );
-			idToCodeBlockMap.put( id, codeBlock );
+			CodeBlockInfo codeBlockInfo = new CodeBlockInfo( language, codeBlock );
+			idToCodeBlockInfoMap.put( id, codeBlockInfo );
 		}
 
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put( TEMP_MARKDOWN_KEY, tempMarkdownText );
-		resultMap.put( ID_TO_CODE_BLOCK_MAP_KEY, idToCodeBlockMap );
+		resultMap.put( ID_TO_CODE_BLOCK_INFO_MAP_KEY, idToCodeBlockInfoMap );
 		return resultMap;
 	}
 
@@ -144,4 +152,32 @@ public class GistCodeHandler
 				"Bearer " + Token.getGithubToken() );
 	}
 
+	public static class CodeBlockInfo
+	{
+		public String language;
+		public String codeBlock;
+
+		public CodeBlockInfo(String language, String codeBlock) {
+			super();
+			this.language = language;
+			this.codeBlock = codeBlock;
+		}
+
+		public String getLanguage()
+		{
+			return language;
+		}
+		public void setLanguage( String language )
+		{
+			this.language = language;
+		}
+		public String getCodeBlock()
+		{
+			return codeBlock;
+		}
+		public void setCodeBlock( String codeBlock )
+		{
+			this.codeBlock = codeBlock;
+		}
+	}
 }
