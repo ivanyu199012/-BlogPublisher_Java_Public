@@ -1,8 +1,10 @@
 package com.blog.publish.publisher;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -13,6 +15,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.blog.publish.publisher.BlogInfo.SITE;
+import com.blog.publish.publisher.utils.DevToUploader;
+import com.blog.publish.publisher.utils.FileHandler;
+import com.blog.publish.publisher.utils.Token;
+import com.blog.publish.publisher.utils.Utils;
 
 /**
  * Hello world!
@@ -21,19 +27,56 @@ import com.blog.publish.publisher.BlogInfo.SITE;
 public class App
 {
 	private static Logger logger = LogManager.getLogger( App.class );
-
-	public static void main( String[] args ) throws ParseException
+	private static interface UploadArticle
 	{
-		Options options = new Options();
-		Option title = Option.builder( "t" ).longOpt( "title" ).hasArg().required( true ).desc( "title of post" )
-				.build();
-		options.addOption( title );
+		public void exec( BlogInfo blogInfo ) throws IOException, InterruptedException;
+	}
 
-		DefaultParser clParse = new DefaultParser();
-		CommandLine cmd = clParse.parse( options, args );
+	private static UploadArticle devToUploadArticle = new UploadArticle() {
 
-		logger.info( "title = " + cmd.getOptionValue( "title" ) );
-		logger.info( "filepath = " + cmd.getArgs()[0] );
+		@Override
+		public void exec( BlogInfo blogInfo ) throws IOException, InterruptedException
+		{
+			String markdown = FileHandler.readFile( blogInfo.getFilepath() );
+			String formattedmarkdown = DevToUploader.formatMarkdownText( markdown );
+			Map<String, Object> articleMap = DevToUploader.prepareArticleMap( blogInfo, formattedmarkdown );
+			DevToUploader.postArticle( articleMap );
+		}
+	};
+
+	private static UploadArticle mediumUploadArticle = new UploadArticle() {
+
+		@Override
+		public void exec( BlogInfo blogInfo )
+		{
+
+		}
+	};
+	private static Map< SITE, UploadArticle > siteToUploadArticleMap = Map.ofEntries(
+		Map.entry( SITE.DEVTO, devToUploadArticle ),
+		Map.entry( SITE.MEDIUM, mediumUploadArticle)
+	);
+
+
+	public static void main( String[] args ) throws ParseException, IOException, InterruptedException
+	{
+		CommandLine cmd = App.getCommandLineBy( args );
+		BlogInfo blogInfo = App.getBlogInfoFrom( cmd );
+
+		if( ! Utils.isNullOrEmpty( blogInfo.getSites() ) )
+		{
+			for( SITE site : blogInfo.getSites() )
+			{
+				try
+				{
+					siteToUploadArticleMap.get( site ).exec( blogInfo );
+				}
+				catch (Exception e)
+				{
+					logger.error( "Upload article to the site " + site.toString(), e );
+				}
+			}
+		}
 	}
 
 	public static CommandLine getCommandLineBy( String[] args ) throws ParseException

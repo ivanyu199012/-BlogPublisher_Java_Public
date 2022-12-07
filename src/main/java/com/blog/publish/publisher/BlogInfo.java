@@ -5,11 +5,11 @@ import java.io.Serializable;
 public class BlogInfo implements Serializable
 {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8812812866344618999L;
 	public enum SITE {
-		DEVTO, MEDIUM, ALL
+		DEVTO, MEDIUM
 	};
 
 	public enum PUBLISH_STATUS {
@@ -33,7 +33,7 @@ public class BlogInfo implements Serializable
 	private PUBLISH_STATUS publishStatus = PUBLISH_STATUS.DRAFT;
 	private String imageUrl;
 	private String subtitle;
-	
+
 	public String getFilepath()
 	{
 		return filepath;
@@ -58,7 +58,7 @@ public class BlogInfo implements Serializable
 	{
 		this.canonicalUrl = canonicalUrl;
 	}
-	
+
 	public PUBLISH_STATUS getPublishStatus()
 	{
 		return publishStatus;
