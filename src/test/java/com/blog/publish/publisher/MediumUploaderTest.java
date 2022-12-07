@@ -39,13 +39,17 @@ public class MediumUploaderTest
 		}
 		String markdownText = ( String ) FileHandler.readFileToObject( mediumMarkdownTextPath );
 		Map< String, String > idToGistLinkMap = FileHandler.readFileToMap( idToGistLinkMapPath );
-		initialData = new InitialData( markdownText, idToGistLinkMap );
+		BlogInfo blogInfo = (BlogInfo) FileHandler.readFileToObject( "temp/blogInfo.txt" );
+		initialData = new InitialData( markdownText, idToGistLinkMap, blogInfo );
 	}
 
 	@Test
 	public void test_formatMarkdownText() throws IOException, InterruptedException
 	{
-		String formattedMarkdownText = MediumUploader.formatMarkdownText( initialData.getMarkdownTex(), initialData.getIdToGistLinkMap() );
+		String formattedMarkdownText = MediumUploader.formatMarkdownText(
+				initialData.getMarkdownTex(),
+				initialData.getIdToGistLinkMap(),
+				initialData.getBlogInfo() );
 		for ( Map.Entry<String,String> entry : initialData.getIdToGistLinkMap().entrySet() )
 		{
 			String id = entry.getKey();
@@ -58,8 +62,11 @@ public class MediumUploaderTest
 	@Test
 	public void test_prepReqDataMap() throws ClassNotFoundException, IOException
 	{
-		String formattedMarkdownText = MediumUploader.formatMarkdownText( initialData.getMarkdownTex(), initialData.getIdToGistLinkMap() );
-		BlogInfo blogInfo = (BlogInfo) FileHandler.readFileToObject( "temp/blogInfo.txt" );
+		BlogInfo blogInfo = initialData.getBlogInfo();
+		String formattedMarkdownText = MediumUploader.formatMarkdownText(
+				initialData.getMarkdownTex(),
+				initialData.getIdToGistLinkMap(),
+				blogInfo );
 
 		Map<String, Object> reqDataMap = MediumUploader.prepReqDataMap( blogInfo, formattedMarkdownText );
 		assertEquals( blogInfo.getTitle(), reqDataMap.get( "title" )  );
@@ -71,22 +78,26 @@ public class MediumUploaderTest
 	@Test
 	public void test_postArticle() throws IOException, InterruptedException, ClassNotFoundException
 	{
-		String formattedMarkdownText = MediumUploader.formatMarkdownText( initialData.getMarkdownTex(), initialData.getIdToGistLinkMap() );
-		BlogInfo blogInfo = (BlogInfo) FileHandler.readFileToObject( "temp/blogInfo.txt" );
+		String formattedMarkdownText = MediumUploader.formatMarkdownText(
+				initialData.getMarkdownTex(),
+				initialData.getIdToGistLinkMap(),
+				initialData.getBlogInfo() );
 
-		Map<String, Object> reqDataMap = MediumUploader.prepReqDataMap( blogInfo, formattedMarkdownText );
-		MediumUploader.postArticle( reqDataMap );
+		Map<String, Object> reqDataMap = MediumUploader.prepReqDataMap( initialData.getBlogInfo(), formattedMarkdownText );
+		String postUrl = MediumUploader.postArticle( reqDataMap );
 	}
 
 	static class InitialData
 	{
 		String markdownTex;
 		Map< String, String > idToGistLinkMap;
+		BlogInfo blogInfo;
 
-		public InitialData(String markdownTex, Map< String, String > idToGistLinkMap) {
+		public InitialData(String markdownTex, Map< String, String > idToGistLinkMap, BlogInfo blogInfo) {
 			super();
 			this.markdownTex = markdownTex;
 			this.idToGistLinkMap = idToGistLinkMap;
+			this.blogInfo = blogInfo;
 		}
 
 		public String getMarkdownTex()
@@ -97,6 +108,11 @@ public class MediumUploaderTest
 		public Map< String, String > getIdToGistLinkMap()
 		{
 			return idToGistLinkMap;
+		}
+
+		public BlogInfo getBlogInfo()
+		{
+			return blogInfo;
 		}
 	}
 }

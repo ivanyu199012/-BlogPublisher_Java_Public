@@ -94,10 +94,15 @@ public class App
 			tags = Arrays.stream( tags ).map( String::trim ).toArray( String[]::new );
 			blogInfo.setTags( tags );
 		}
-		
-		if( cmd.hasOption( "imageUrl" ) ) 
+
+		if( cmd.hasOption( "imageUrl" ) )
 		{
 			blogInfo.setImageUrl( cmd.getOptionValue( "imageUrl" ) );
+		}
+
+		if( cmd.hasOption( "subtitle" ) )
+		{
+			blogInfo.setSubtitle( cmd.getOptionValue( "subtitle" ) );
 		}
 
 		return blogInfo;

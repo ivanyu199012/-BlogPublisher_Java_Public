@@ -45,7 +45,7 @@ public class AppTest
 		assertEquals( cmd.getOptionValue( "tags" ), args[10] );
 		assertEquals( cmd.getOptionValue( "imageUrl" ), args[12] );
 	}
-	
+
 	@Test
 	public void test_getBlogInfoFrom() throws ParseException, IOException
 	{
@@ -62,7 +62,9 @@ public class AppTest
 				"--tags",
 				"Python,Django,Threads,Message Queue",
 				"--imageUrl",
-				"https://ivanyu2021.hashnode.dev/_next/image?url=https%3A%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Funsplash%2FDUmFLtMeAbQ%2Fupload%2Fv1651471542511%2Fg0KSi4xl4.jpeg%3Fw%3D1600%26h%3D840%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress%2Cformat%26format%3Dwebp&w=1920&q=75"
+				"https://ivanyu2021.hashnode.dev/_next/image?url=https%3A%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Funsplash%2FDUmFLtMeAbQ%2Fupload%2Fv1651471542511%2Fg0KSi4xl4.jpeg%3Fw%3D1600%26h%3D840%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress%2Cformat%26format%3Dwebp&w=1920&q=75",
+				"--subtitle",
+				"Handle long running task using Threading and Django Cache"
 				};
 		CommandLine cmd = App.getCommandLineBy( args );
 		BlogInfo blogInfo = App.getBlogInfoFrom( cmd );
@@ -74,7 +76,7 @@ public class AppTest
 		assertTrue( Arrays.asList( blogInfo.getSites() ).containsAll( Arrays.asList( sites ) ) );
 		assertTrue( Arrays.asList( blogInfo.getTags() ).containsAll( Arrays.asList( cmd.getOptionValue( "tags" ).split( "," ) ) ) );
 		assertEquals( blogInfo.getImageUrl(), cmd.getOptionValue( "imageUrl" ) );
-		
+
 		FileHandler.writeObjectToFile( blogInfo, "temp/blogInfo.txt" );
 	}
 }

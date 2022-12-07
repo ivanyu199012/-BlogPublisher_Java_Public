@@ -9,6 +9,8 @@ import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +30,7 @@ public class MediumUploader
 			Map.entry( "User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0" )
 		);
 
-	public static String formatMarkdownText( String markdownText, Map<String, String> idToGistLinkMap )
+	public static String formatMarkdownText( String markdownText, Map<String, String> idToGistLinkMap, BlogInfo blogInfo )
 	{
 		String formattedMarkdownText = markdownText;
 		for ( Map.Entry<String,String> entry : idToGistLinkMap.entrySet() )
@@ -38,7 +40,12 @@ public class MediumUploader
 			formattedMarkdownText = formattedMarkdownText.replace( id, "\n" + gistLink + "\n" );
 		};
 
-		return formattedMarkdownText;
+		StringBuilder sb = new StringBuilder();
+		sb.append( "\n![image.png](" + blogInfo.getImageUrl() + ")\n"  );
+		sb.append( "\n# " + blogInfo.getTitle() + "\n"  );
+		sb.append( "\n# " + blogInfo.getSubtitle() + "\n"  );
+		sb.append( formattedMarkdownText  );
+		return sb.toString();
 	}
 
 	public static Map<String, Object> prepReqDataMap( BlogInfo blogInfo, String markdown  )
@@ -60,16 +67,44 @@ public class MediumUploader
 
 	public static String postArticle( Map<String, Object> reqDataMap ) throws IOException, InterruptedException
 	{
-		String postUrl = null;
-		String authorId = getAuthorId();
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonStr = mapper.writeValueAsString( reqDataMap );
 
-		return postUrl;
+		String authorId = getAuthorId();
+		HttpRequest request = getCommonHeaderBuilder()
+				.uri( URI.create( "https://api.medium.com/v1/users/" + authorId + "/posts" ) )
+				.POST( HttpRequest.BodyPublishers.ofString( jsonStr ) )
+				.build();
+
+		HttpClient client = HttpClient.newHttpClient();
+		HttpResponse<String> response = client.send( request, HttpResponse.BodyHandlers.ofString() );
+
+		if ( response.statusCode() != 200 && response.statusCode() != 201 ) {
+			logger.error( "response.statusCode() = " + response.statusCode() );
+			logger.error( response.body() );
+			return null;
+		}
+
+		Map<String, Object> responseMap = mapper.readValue( response.body(), Map.class );
+		String postUrl = ( String ) ( ( Map<String, Object> ) responseMap.get( "data" ) ).get( "url" );
+		logger.info( "Medium postUrl = " + postUrl );
+
+		Matcher postIdMatcher = Pattern.compile( "https:\\/\\/medium\\.com\\/.*\\/(.*)" ).matcher( postUrl );
+		String editPostUrl = null;
+		if( ! postIdMatcher.find() )
+		{
+			logger.error( "postId is not found" );
+			return null;
+		}
+
+		editPostUrl = "https://medium.com/p/" + postIdMatcher.group( 1 ) + "/edit";
+		logger.info( "editPostUrl = " + editPostUrl );
+		return editPostUrl;
 	}
 
 	private static String getAuthorId() throws IOException, InterruptedException
 	{
-		Builder builder = getCommonHeaderBuilder();
-		HttpRequest request = builder.uri( URI.create( "https://api.medium.com/v1/me" ) )
+		HttpRequest request = getCommonHeaderBuilder().uri( URI.create( "https://api.medium.com/v1/me" ) )
 			.GET()
 			.build();
 
