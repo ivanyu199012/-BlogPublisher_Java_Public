@@ -71,22 +71,6 @@
 					<version>3.0.2</version>
 					<executions>
 						<execution>
-							<id>copy-resource-temp</id>
-							<phase>package</phase>
-							<goals>
-								<goal>copy-resources</goal>
-							</goals>
-							<configuration>
-								<outputDirectory>${project.build.directory}/temp</outputDirectory>
-								<resources>
-									<resource>
-										<directory>temp</directory>
-										<filtering>true</filtering>
-									</resource>
-								</resources>
-							</configuration>
-						</execution>
-						<execution>
 							<id>copy-resource-tokens</id>
 							<phase>package</phase>
 							<goals>
@@ -164,11 +148,35 @@
 					<artifactId>maven-project-info-reports-plugin</artifactId>
 					<version>3.0.0</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>3.0.0</version>
+					<executions>
+						<execution>
+							<id>tempFolder</id>
+							<phase>package</phase>
+							<configuration>
+								<target>
+									<echo message="Creating temporary directory" />
+									<delete dir="${project.build.directory}/temp" />
+									<mkdir dir="${project.build.directory}/temp" />
+								</target>
+							</configuration>
+							<goals>
+								<goal>run</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

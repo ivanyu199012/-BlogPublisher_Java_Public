@@ -1,7 +1,6 @@
 package com.blog.publish.publisher;
 
-import static org.junit.Assert.assertTrue;
-
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -23,5 +22,21 @@ public class DeleteGistTest
 			String gistCodeBlockId = gistLink.replace( "https://gist.github.com/", "" );
 			GistCodeHandler.deleteGist( gistCodeBlockId );
 		};
+	}
+
+	@Test
+	public void test_deleteGistsTargetFolder() throws ParseException, IOException, InterruptedException
+	{
+		String path = "target/" + App.ID_TO_GIST_LINK_MAP_PATH;
+		if ( new File(path).exists() )
+		{
+			Map< String, String > idToGistLinkMap = FileHandler.readFileToMap( path );
+			for ( Map.Entry<String,String> entry : idToGistLinkMap.entrySet() )
+			{
+				String gistLink = entry.getValue();
+				String gistCodeBlockId = gistLink.replace( "https://gist.github.com/", "" );
+				GistCodeHandler.deleteGist( gistCodeBlockId );
+			};
+		}
 	}
 }

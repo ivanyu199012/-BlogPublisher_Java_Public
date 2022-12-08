@@ -9,8 +9,8 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.blog.publish.publisher.utils.FileHandler;
@@ -75,6 +75,7 @@ public class MediumUploaderTest
 		assertEquals( blogInfo.getCanonicalUrl(), reqDataMap.get( "canonicalUrl" ) );
 	}
 
+	@Ignore
 	@Test
 	public void test_postArticle() throws IOException, InterruptedException, ClassNotFoundException
 	{

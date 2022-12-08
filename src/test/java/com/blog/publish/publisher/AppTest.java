@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.blog.publish.publisher.BlogInfo.SITE;
@@ -80,6 +81,7 @@ public class AppTest
 		FileHandler.writeObjectToFile( blogInfo, "temp/blogInfo.txt" );
 	}
 
+	@Ignore
 	@Test
 	public void test_main() throws ParseException, IOException, InterruptedException
 	{

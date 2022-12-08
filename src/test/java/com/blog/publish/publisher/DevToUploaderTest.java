@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.blog.publish.publisher.utils.DevToUploader;
@@ -34,24 +35,25 @@ public class DevToUploaderTest
 		BlogInfo blogInfo = ( BlogInfo ) FileHandler.readFileToObject( "temp/blogInfo.txt" );
 		Map<String, Object> articleMap = DevToUploader.prepareArticleMap( blogInfo, markdown );
 		assertTrue( articleMap.containsKey( "article" ) );
-		
+
 		Map<String, Object> reqMap = ( Map<String, Object> ) articleMap.get( "article" );
 		assertEquals( reqMap.get( "title" ), blogInfo.getTitle() );
 		assertEquals( reqMap.get( "body_markdown" ), markdown );
 		assertEquals( reqMap.get( "published" ), blogInfo.getPublishStatus().devToStatus );
 		assertEquals( reqMap.get( "canonical_url" ), blogInfo.getCanonicalUrl() );
 	}
-	
+
+	@Ignore
 	@Test
 	public void test_postArticle() throws IOException, ClassNotFoundException, InterruptedException
 	{
 		String markdown = FileHandler
 				.readFile( "temp\\5. Django_background_task.md" );
 		markdown = DevToUploader.formatMarkdownText( markdown );
-		
+
 		BlogInfo blogInfo = ( BlogInfo ) FileHandler.readFileToObject( "temp/blogInfo.txt" );
 		blogInfo.setTitle( blogInfo.getTitle() + "_v1" );
-		
+
 		Map<String, Object> reqMap = DevToUploader.prepareArticleMap( blogInfo, markdown + " TEST" );
 		String postUrl = DevToUploader.postArticle( reqMap );
 		String urlPattern = "^https:\\/\\/dev\\.to\\/ivanyu2021\\/.*\\/edit$";
