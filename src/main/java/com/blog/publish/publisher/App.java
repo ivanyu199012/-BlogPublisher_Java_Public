@@ -1,6 +1,7 @@
 package com.blog.publish.publisher;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +20,6 @@ import com.blog.publish.publisher.utils.DevToUploader;
 import com.blog.publish.publisher.utils.FileHandler;
 import com.blog.publish.publisher.utils.GistCodeHandler;
 import com.blog.publish.publisher.utils.MediumUploader;
-import com.blog.publish.publisher.utils.Token;
 import com.blog.publish.publisher.utils.Utils;
 
 /**
@@ -51,7 +51,8 @@ public class App
 		@Override
 		public void exec( BlogInfo blogInfo, String markdown ) throws IOException, InterruptedException
 		{
-			Map< String, Object > resultMap = GistCodeHandler.convertBlogCodeToGist( "5_Django_background_task.md", markdown );
+			String filename = Paths.get( blogInfo.getFilepath() ).getFileName().toString();
+			Map< String, Object > resultMap = GistCodeHandler.convertBlogCodeToGist( filename, markdown );
 			String markdownText = ( String ) resultMap.get( GistCodeHandler.TEMP_MARKDOWN_KEY );
 			Map< String, String > idToGistLinkMap = ( Map< String, String > ) resultMap.get( GistCodeHandler.ID_TO_GIST_LINK_MAP_KEY );
 
