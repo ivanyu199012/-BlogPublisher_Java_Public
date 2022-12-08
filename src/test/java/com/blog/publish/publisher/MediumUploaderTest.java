@@ -84,7 +84,7 @@ public class MediumUploaderTest
 				initialData.getBlogInfo() );
 
 		Map<String, Object> reqDataMap = MediumUploader.prepReqDataMap( initialData.getBlogInfo(), formattedMarkdownText );
-		String postUrl = MediumUploader.postArticle( reqDataMap );
+		MediumUploader.postArticle( reqDataMap );
 	}
 
 	static class InitialData

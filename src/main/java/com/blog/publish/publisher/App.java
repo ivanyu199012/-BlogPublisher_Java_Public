@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 import com.blog.publish.publisher.BlogInfo.SITE;
 import com.blog.publish.publisher.utils.DevToUploader;
 import com.blog.publish.publisher.utils.FileHandler;
+import com.blog.publish.publisher.utils.GistCodeHandler;
+import com.blog.publish.publisher.utils.MediumUploader;
 import com.blog.publish.publisher.utils.Token;
 import com.blog.publish.publisher.utils.Utils;
 
@@ -26,18 +28,18 @@ import com.blog.publish.publisher.utils.Utils;
  */
 public class App
 {
+	public static final String ID_TO_GIST_LINK_MAP_PATH = "temp\\idToGistLinkMap_mediumUploadArticle.txt";
 	private static Logger logger = LogManager.getLogger( App.class );
 	private static interface UploadArticle
 	{
-		public void exec( BlogInfo blogInfo ) throws IOException, InterruptedException;
+		public void exec( BlogInfo blogInfo, String markdown ) throws IOException, InterruptedException;
 	}
 
 	private static UploadArticle devToUploadArticle = new UploadArticle() {
 
 		@Override
-		public void exec( BlogInfo blogInfo ) throws IOException, InterruptedException
+		public void exec( BlogInfo blogInfo, String markdown ) throws IOException, InterruptedException
 		{
-			String markdown = FileHandler.readFile( blogInfo.getFilepath() );
 			String formattedmarkdown = DevToUploader.formatMarkdownText( markdown );
 			Map<String, Object> articleMap = DevToUploader.prepareArticleMap( blogInfo, formattedmarkdown );
 			DevToUploader.postArticle( articleMap );
@@ -47,11 +49,23 @@ public class App
 	private static UploadArticle mediumUploadArticle = new UploadArticle() {
 
 		@Override
-		public void exec( BlogInfo blogInfo )
+		public void exec( BlogInfo blogInfo, String markdown ) throws IOException, InterruptedException
 		{
+			Map< String, Object > resultMap = GistCodeHandler.convertBlogCodeToGist( "5_Django_background_task.md", markdown );
+			String markdownText = ( String ) resultMap.get( GistCodeHandler.TEMP_MARKDOWN_KEY );
+			Map< String, String > idToGistLinkMap = ( Map< String, String > ) resultMap.get( GistCodeHandler.ID_TO_GIST_LINK_MAP_KEY );
 
+			String formattedMarkdownText = MediumUploader.formatMarkdownText(
+					markdownText,
+					idToGistLinkMap,
+					blogInfo );
+			Map<String, Object> reqDataMap = MediumUploader.prepReqDataMap( blogInfo, formattedMarkdownText );
+			MediumUploader.postArticle( reqDataMap );
+
+			FileHandler.writeMapToFile( idToGistLinkMap, ID_TO_GIST_LINK_MAP_PATH );
 		}
 	};
+
 	private static Map< SITE, UploadArticle > siteToUploadArticleMap = Map.ofEntries(
 		Map.entry( SITE.DEVTO, devToUploadArticle ),
 		Map.entry( SITE.MEDIUM, mediumUploadArticle)
@@ -62,6 +76,7 @@ public class App
 	{
 		CommandLine cmd = App.getCommandLineBy( args );
 		BlogInfo blogInfo = App.getBlogInfoFrom( cmd );
+		String markdown = FileHandler.readFile( blogInfo.getFilepath() );
 
 		if( ! Utils.isNullOrEmpty( blogInfo.getSites() ) )
 		{
@@ -69,7 +84,9 @@ public class App
 			{
 				try
 				{
-					siteToUploadArticleMap.get( site ).exec( blogInfo );
+					logger.info( "Started Uploading to " + site.name() );
+					siteToUploadArticleMap.get( site ).exec( blogInfo, markdown );
+					logger.info( "Finished Uploading to " + site.name() );
 				}
 				catch (Exception e)
 				{

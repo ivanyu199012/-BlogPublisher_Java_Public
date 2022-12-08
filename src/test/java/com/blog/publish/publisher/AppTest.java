@@ -22,7 +22,7 @@ public class AppTest
 	public void test_getCommandLineBy() throws ParseException
 	{
 		String[] args = {
-				"C:\\MyFiles\\Git\\3. Blog\\blog\\5. Django_background_task.md",
+				"temp\\5. Django_background_task.md",
 				"--title",
 				"A simple approach for background task in Django",
 				"--canonicalUrl",
@@ -50,7 +50,7 @@ public class AppTest
 	public void test_getBlogInfoFrom() throws ParseException, IOException
 	{
 		String[] args = {
-				"C:\\MyFiles\\Git\\3. Blog\\blog\\5. Django_background_task.md",
+				"temp\\5. Django_background_task.md",
 				"--title",
 				"A simple approach for background task in Django",
 				"--canonicalUrl",
@@ -86,13 +86,13 @@ public class AppTest
 		String[] args = {
 				"temp\\5. Django_background_task.md",
 				"--title",
-				"A simple approach for background task in Django",
+				"A simple approach for background task in Django_v2_app",
 				"--canonicalUrl",
 				"https://ivanyu2021.hashnode.dev/a-simple-approach-for-background-task-in-django",
 				"--series",
 				"Python",
 				"--sites",
-				"DEVTO",
+				"DEVTO,MEDIUM",
 				"--tags",
 				"Python,Django,Threads,Message Queue",
 				"--imageUrl",
