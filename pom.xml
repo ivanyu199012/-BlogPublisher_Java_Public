@@ -69,6 +69,43 @@
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>3.0.2</version>
+					<executions>
+						<execution>
+							<id>copy-resource-temp</id>
+							<phase>package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}/temp</outputDirectory>
+								<resources>
+									<resource>
+										<directory>temp</directory>
+										<filtering>true</filtering>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+						<execution>
+							<id>copy-resource-tokens</id>
+							<phase>package</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.build.directory}</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${basedir}</directory>
+										<includes>
+											<include>tokens.properties</include>
+										</includes>
+										<filtering>true</filtering>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
