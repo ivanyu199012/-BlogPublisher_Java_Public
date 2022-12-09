@@ -26,7 +26,8 @@ public class GistCodeHandler
 	public static final String DELIMITER = "_@_";
 	public static final Map<String, String> LANG_2_EXT_MAP = Map.ofEntries(
 		new AbstractMap.SimpleEntry<String, String>( "python", "py" ),
-		new AbstractMap.SimpleEntry<String, String>( "javascript", "js" )
+		new AbstractMap.SimpleEntry<String, String>( "javascript", "js" ),
+		new AbstractMap.SimpleEntry<String, String>( "typescript", "ts" )
 	);
 	public static final String TEMP_MARKDOWN_KEY = "TEMP_MARKDOWN_KEY";
 	public static final String ID_TO_CODE_BLOCK_INFO_MAP_KEY = "ID_TO_CODE_BLOCK_INFO_MAP_KEY";
