@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,7 +44,10 @@ public class MediumUploader
 		StringBuilder sb = new StringBuilder();
 		sb.append( "\n![image.png](" + blogInfo.getImageUrl() + ")\n"  );
 		sb.append( "\n# " + blogInfo.getTitle() + "\n"  );
-		sb.append( "\n# " + blogInfo.getSubtitle() + "\n"  );
+		if ( ! StringUtils.isBlank( blogInfo.getSubtitle() ) )
+		{
+			sb.append( "\n# " + blogInfo.getSubtitle() + "\n"  );
+		}
 		sb.append( formattedMarkdownText  );
 		return sb.toString();
 	}
