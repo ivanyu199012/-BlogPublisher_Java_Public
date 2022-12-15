@@ -116,8 +116,7 @@ public class MediumUploader
 		HttpResponse<String> response = client.send( request, HttpResponse.BodyHandlers.ofString() );
 
 		if ( response.statusCode() != 200 && response.statusCode() != 201 ) {
-			logger.error( "response.statusCode() = " + response.statusCode() );
-			logger.error( response.body() );
+			Utils.logResponseError( response );
 			return null;
 		}
 

@@ -65,8 +65,7 @@ public class DevToUploader
 
 		if ( response.statusCode() != 201 )
 		{
-			logger.error( "response.statusCode() = " + response.statusCode() );
-			logger.error( response );
+			Utils.logResponseError( response );
 			return null;
 		}
 
