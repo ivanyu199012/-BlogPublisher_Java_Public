@@ -3,5 +3,6 @@
 	"javascript": "js",
 	"typescript": "ts",
 	"cmd": "cmd",
-	"html": "html"
+	"html": "html",
+	"json": "json"
 }
