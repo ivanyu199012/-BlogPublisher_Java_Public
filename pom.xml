@@ -83,6 +83,7 @@
 										<directory>${basedir}</directory>
 										<includes>
 											<include>tokens.properties</include>
+											<include>language2Ext.json</include>
 										</includes>
 										<filtering>true</filtering>
 									</resource>
