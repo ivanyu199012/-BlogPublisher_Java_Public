@@ -7,9 +7,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,13 +67,21 @@ public class GistCodeHandler
 
 	public static Map<String, Object> convertCodeBlockToId( String fileBaseName, String markdownText )
 	{
-		String[] codeBlockArr = Pattern.compile( "```[\\s\\S][^```]+```" ).matcher( markdownText ).results().map( MatchResult::group ).toArray(String[]::new);
+//		String[] codeBlockArr = Pattern.compile( "```[\\s\\S][^(```)]+```" ).matcher( markdownText ).results().map( MatchResult::group ).toArray(String[]::new);
+
+		String[] textArr = markdownText.split( "```" );
+		int limit = (int) Math.floor( textArr.length / 2 );
+		List< String > codeBlockArr = new ArrayList<>();
+		for( int i = 0; i < Math.floor( limit ); i++ )
+		{
+			codeBlockArr.add( "```" + textArr[ 2 * i + 1 ] + "```" );
+		}
 
 		String tempMarkdownText = markdownText;
 		Map<String, CodeBlockInfo> idToCodeBlockInfoMap = new HashMap<>();
-		for( int index = 0; index < codeBlockArr.length; index++ )
+		for( int index = 0; index < codeBlockArr.size(); index++ )
 		{
-			String codeBlock = codeBlockArr[ index ];
+			String codeBlock = codeBlockArr.get( index );
 			String id = DELIMITER + fileBaseName + "_code_" + index + DELIMITER;
 			tempMarkdownText = tempMarkdownText.replace( codeBlock, id );
 

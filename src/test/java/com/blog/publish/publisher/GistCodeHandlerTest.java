@@ -33,7 +33,7 @@ public class GistCodeHandlerTest
 	}
 
 	@Test
-	public void test_convertCodeBlockToId() throws IOException
+	public void test_convertCodeBlockToId_1() throws IOException
 	{
 		String markdown = FileHandler.readFile( "temp\\5. Django_background_task.md" );
 		Map< String, Object > resultMap = GistCodeHandler.convertCodeBlockToId( "5_Django_background_task.md",markdown );
@@ -45,6 +45,21 @@ public class GistCodeHandlerTest
 		CodeBlockInfo codeBlockInfo = ( ( Map< String, CodeBlockInfo > ) resultMap.get( GistCodeHandler.ID_TO_CODE_BLOCK_INFO_MAP_KEY ) ).get( "_@_5_Django_background_task.md_code_5_@_" );
 		assertTrue( ! codeBlockInfo.getCodeBlock().contains( "```" ) );
 		assertEquals( codeBlockInfo.getLanguage(), "python" );
+	}
+
+	@Test
+	public void test_convertCodeBlockToId_2() throws IOException
+	{
+		String markdown = FileHandler.readFile( "temp\\4. Electron_n_django_setup.md" );
+		Map< String, Object > resultMap = GistCodeHandler.convertCodeBlockToId( "4. Electron_n_django_setup.md",markdown );
+		assertTrue( resultMap.containsKey( GistCodeHandler.TEMP_MARKDOWN_KEY ) );
+		assertTrue( !( ( String ) resultMap.get( GistCodeHandler.TEMP_MARKDOWN_KEY ) ).contains( "```" ) );
+
+		assertTrue( resultMap.containsKey( GistCodeHandler.ID_TO_CODE_BLOCK_INFO_MAP_KEY ) );
+		assertTrue( ( ( Map< String, String > ) resultMap.get( GistCodeHandler.ID_TO_CODE_BLOCK_INFO_MAP_KEY ) ).size() == 18 );
+		CodeBlockInfo codeBlockInfo = ( ( Map< String, CodeBlockInfo > ) resultMap.get( GistCodeHandler.ID_TO_CODE_BLOCK_INFO_MAP_KEY ) ).get( "_@_4. Electron_n_django_setup.md_code_17_@_" );
+		assertTrue( ! codeBlockInfo.getCodeBlock().contains( "```" ) );
+		assertEquals( codeBlockInfo.getLanguage(), "typescript" );
 	}
 
 	@Test
