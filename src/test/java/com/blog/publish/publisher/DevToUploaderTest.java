@@ -1,6 +1,7 @@
 package com.blog.publish.publisher;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -58,5 +59,21 @@ public class DevToUploaderTest
 		String postUrl = DevToUploader.postArticle( reqMap );
 		String urlPattern = "^https:\\/\\/dev\\.to\\/ivanyu2021\\/.*\\/edit$";
 		assertTrue( postUrl.matches( urlPattern ) );
+	}
+
+	@Test
+	public void test_failed_postArticle() throws IOException, ClassNotFoundException, InterruptedException
+	{
+		String markdown = FileHandler
+				.readFile( "temp\\5. Django_background_task.md" );
+		markdown = DevToUploader.formatMarkdownText( markdown );
+
+		BlogInfo blogInfo = ( BlogInfo ) FileHandler.readFileToObject( "temp/blogInfo.txt" );
+		blogInfo.setTitle( blogInfo.getTitle() + "_v1" );
+		blogInfo.setTags( new String[] {"Electron","Django","Python","TypeScript","webpack"} );
+
+		Map<String, Object> reqMap = DevToUploader.prepareArticleMap( blogInfo, markdown + " TEST" );
+		String postUrl = DevToUploader.postArticle( reqMap );
+		assertNull( postUrl );
 	}
 }
