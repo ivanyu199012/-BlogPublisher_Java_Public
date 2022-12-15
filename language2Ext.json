@@ -1,0 +1,7 @@
+{
+	"python": "py",
+	"javascript": "js",
+	"typescript": "ts",
+	"cmd": "cmd",
+	"html": "html"
+}

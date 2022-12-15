@@ -8,6 +8,7 @@ import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +26,22 @@ public class GistCodeHandler
 
 	private static final Logger logger = LogManager.getLogger( GistCodeHandler.class );
 	public static final String DELIMITER = "_@_";
-	public static final Map<String, String> LANG_2_EXT_MAP = Map.ofEntries(
-		new AbstractMap.SimpleEntry<String, String>( "python", "py" ),
-		new AbstractMap.SimpleEntry<String, String>( "javascript", "js" ),
-		new AbstractMap.SimpleEntry<String, String>( "typescript", "ts" )
-	);
+
+	public static Map<String, String> initLang2ExtMap()
+	{
+		Map<String, String> lang2ExtMap = null;
+		try
+		{
+			lang2ExtMap = Collections.unmodifiableMap( FileHandler.readFileToMap( "language2Ext.json" ) );
+		}
+		catch (IOException e)
+		{
+			logger.error( "failed to read language2Ext.json", e );
+		}
+		return lang2ExtMap;
+	}
+	public static final Map<String, String> LANG_2_EXT_MAP = initLang2ExtMap();
+
 	public static final String TEMP_MARKDOWN_KEY = "TEMP_MARKDOWN_KEY";
 	public static final String ID_TO_CODE_BLOCK_INFO_MAP_KEY = "ID_TO_CODE_BLOCK_INFO_MAP_KEY";
 	public static final String ID_TO_GIST_LINK_MAP_KEY = "ID_TO_CODE_BLOCK_MAP_KEY";
