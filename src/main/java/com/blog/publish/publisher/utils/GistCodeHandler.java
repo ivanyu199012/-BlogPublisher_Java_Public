@@ -141,7 +141,7 @@ public class GistCodeHandler
 		HttpResponse<String> response = client.send( request, HttpResponse.BodyHandlers.ofString() );
 
 		if ( response.statusCode() != 200 && response.statusCode() != 201 ) {
-			Utils.logResponseError( response );
+			handleErrorResponse( response );
 			return null;
 		}
 
@@ -160,7 +160,7 @@ public class GistCodeHandler
 		HttpResponse<String> response = client.send( request, HttpResponse.BodyHandlers.ofString() );
 
 		if ( response.statusCode() != 204 ) {
-			Utils.logResponseError( response );
+			handleErrorResponse( response );
 		}
 
 		logger.info( "Gist with id #" + id + " has been deleted successfully" );
@@ -170,6 +170,15 @@ public class GistCodeHandler
 	{
 		return HttpRequest.newBuilder().header( "Accept", "application/vnd.github+json" ).header( "Authorization",
 				"Bearer " + Token.getGithubToken() );
+	}
+	
+	private static void handleErrorResponse( HttpResponse<String> response ) 
+	{
+		Utils.logResponseError( response );
+		if ( response.statusCode() == 401 ) 
+		{
+			logger.error( "Please verify if your Github token is expired or not" );
+		}
 	}
 
 	public static class CodeBlockInfo
