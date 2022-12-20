@@ -23,19 +23,21 @@ public class AppTest
 	public void test_getCommandLineBy() throws ParseException
 	{
 		String[] args = {
-				"temp\\5. Django_background_task.md",
+				"temp\\sample.md",
 				"--title",
-				"A simple approach for background task in Django",
+				"Sample Title",
 				"--canonicalUrl",
-				"https://ivanyu2021.hashnode.dev/a-simple-approach-for-background-task-in-django",
+				"https://ivanyu2021.hashnode.dev/correct-steps-to-setup-basic-environment-for-python",
 				"--series",
 				"Python",
 				"--sites",
 				"DEVTO,MEDIUM",
 				"--tags",
-				"Python,Django,Threads,Message Queue",
+				"Python",
 				"--imageUrl",
-				"https://ivanyu2021.hashnode.dev/_next/image?url=https%3A%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Funsplash%2FDUmFLtMeAbQ%2Fupload%2Fv1651471542511%2Fg0KSi4xl4.jpeg%3Fw%3D1600%26h%3D840%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress%2Cformat%26format%3Dwebp&w=1920&q=75"
+				"https://ivanyu2021.hashnode.dev/_next/image?url=https%3A%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Fupload%2Fv1626249332587%2FK6qFAif_l.png%3Fw%3D1600%26h%3D840%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress%2Cformat%26format%3Dwebp&w=1920&q=75",
+				"--subtitle",
+				"Sample Subtitle"
 				};
 		CommandLine cmd = App.getCommandLineBy( args );
 		assertEquals( cmd.getArgs()[ 0 ], args[ 0 ] );
@@ -51,21 +53,21 @@ public class AppTest
 	public void test_getBlogInfoFrom() throws ParseException, IOException
 	{
 		String[] args = {
-				"temp\\5. Django_background_task.md",
+				"temp\\sample.md",
 				"--title",
-				"A simple approach for background task in Django",
+				"Sample Title",
 				"--canonicalUrl",
-				"https://ivanyu2021.hashnode.dev/a-simple-approach-for-background-task-in-django",
+				"https://ivanyu2021.hashnode.dev/correct-steps-to-setup-basic-environment-for-python",
 				"--series",
 				"Python",
 				"--sites",
 				"DEVTO,MEDIUM",
 				"--tags",
-				"Python,Django,Threads,Message Queue",
+				"Python",
 				"--imageUrl",
-				"https://ivanyu2021.hashnode.dev/_next/image?url=https%3A%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Funsplash%2FDUmFLtMeAbQ%2Fupload%2Fv1651471542511%2Fg0KSi4xl4.jpeg%3Fw%3D1600%26h%3D840%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress%2Cformat%26format%3Dwebp&w=1920&q=75",
+				"https://ivanyu2021.hashnode.dev/_next/image?url=https%3A%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Fupload%2Fv1626249332587%2FK6qFAif_l.png%3Fw%3D1600%26h%3D840%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress%2Cformat%26format%3Dwebp&w=1920&q=75",
 				"--subtitle",
-				"Handle long running task using Threading and Django Cache"
+				"Sample Subtitle"
 				};
 		CommandLine cmd = App.getCommandLineBy( args );
 		BlogInfo blogInfo = App.getBlogInfoFrom( cmd );
@@ -86,21 +88,21 @@ public class AppTest
 	public void test_main() throws ParseException, IOException, InterruptedException
 	{
 		String[] args = {
-				"temp\\5. Django_background_task.md",
+				"temp\\sample.md",
 				"--title",
-				"A simple approach for background task in Django_v2_app",
+				"Sample Title",
 				"--canonicalUrl",
-				"https://ivanyu2021.hashnode.dev/a-simple-approach-for-background-task-in-django",
+				"https://ivanyu2021.hashnode.dev/correct-steps-to-setup-basic-environment-for-python",
 				"--series",
 				"Python",
 				"--sites",
 				"DEVTO,MEDIUM",
 				"--tags",
-				"Python,Django,Threads,Message Queue",
+				"Python",
 				"--imageUrl",
-				"https://ivanyu2021.hashnode.dev/_next/image?url=https%3A%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Funsplash%2FDUmFLtMeAbQ%2Fupload%2Fv1651471542511%2Fg0KSi4xl4.jpeg%3Fw%3D1600%26h%3D840%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress%2Cformat%26format%3Dwebp&w=1920&q=75",
+				"https://ivanyu2021.hashnode.dev/_next/image?url=https%3A%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Fupload%2Fv1626249332587%2FK6qFAif_l.png%3Fw%3D1600%26h%3D840%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress%2Cformat%26format%3Dwebp&w=1920&q=75",
 				"--subtitle",
-				"Handle long running task using Threading and Django Cache"
+				"Sample Subtitle"
 				};
 		App.main( args );
 	}

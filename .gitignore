@@ -1,3 +1,5 @@
 /target/
 /log/
-/temp/
+temp/blogInfo.txt
+temp/idToGistLinkMap.txt
+temp/sample_medium.md

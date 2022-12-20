@@ -20,15 +20,15 @@ public class FileHandlerTest {
 	@Test
 	public void test_readFile() throws IOException
 	{
-		String path = "temp\\5. Django_background_task.md";
+		String path = "temp\\sample.md";
 		String content = FileHandler.readFile( path );
-		assertTrue( content.contains( "# 1. Introduction & Proof-Of-Concept" ) );
+		assertTrue( content.contains( "# 1. Sample Introduction" ) );
 	}
 	
 	@Test
 	public void test_readFileToObject() throws ClassNotFoundException, IOException 
 	{
 		BlogInfo blogInfo = (BlogInfo) FileHandler.readFileToObject( "temp/blogInfo.txt" );
-		assertEquals( blogInfo.getTitle(), "A simple approach for background task in Django" ); 
+		assertEquals( blogInfo.getTitle(), "Sample Title" ); 
 	}
 }

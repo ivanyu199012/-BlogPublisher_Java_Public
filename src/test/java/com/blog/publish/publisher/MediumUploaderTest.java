@@ -25,12 +25,12 @@ public class MediumUploaderTest
 	@BeforeClass
 	public static void setUp() throws IOException, InterruptedException, ClassNotFoundException
 	{
-		String mediumMarkdownTextPath = "temp\\5. Django_background_task.medium.md";
+		String mediumMarkdownTextPath = "temp\\sample_medium.md";
 		String idToGistLinkMapPath = "temp\\idToGistLinkMap.txt";
 		if ( ! new File( mediumMarkdownTextPath ).exists() || ! new File( idToGistLinkMapPath ).exists() )
 		{
-			String markdown = FileHandler.readFile( "temp\\5. Django_background_task.md" );
-			Map< String, Object > resultMap = GistCodeHandler.convertBlogCodeToGist( "5_Django_background_task.md", markdown );
+			String markdown = FileHandler.readFile( "temp\\sample.md" );
+			Map< String, Object > resultMap = GistCodeHandler.convertBlogCodeToGist( "sample.md", markdown );
 			String markdownText = ( String ) resultMap.get( GistCodeHandler.TEMP_MARKDOWN_KEY );
 			Map< String, String > idToGistLinkMap = ( Map< String, String > ) resultMap.get( GistCodeHandler.ID_TO_GIST_LINK_MAP_KEY );
 
