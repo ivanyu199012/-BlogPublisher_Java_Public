@@ -104,7 +104,7 @@ public class App
 				.build();
 		options.addOption( title );
 
-		Option canonicalUrl = Option.builder( "cUrl" ).longOpt( "canonicalUrl" ).hasArg().required( true )
+		Option canonicalUrl = Option.builder( "cUrl" ).longOpt( "canonicalUrl" ).hasArg().required( false )
 				.desc( "Canonical Url" ).build();
 		options.addOption( canonicalUrl );
 
