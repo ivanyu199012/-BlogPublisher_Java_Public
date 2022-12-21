@@ -31,13 +31,11 @@ public class DeleteGistTest
 	{
 		String path = "target/" + App.ID_TO_GIST_LINK_MAP_PATH;
 		if ( new File( path ).exists() ) {
-			if ( new File( path ).exists() ) {
-				Map< String, String > idToGistLinkMap = FileHandler.readFileToMap( path );
-				for (Map.Entry< String, String > entry : idToGistLinkMap.entrySet()) {
-					String gistLink = entry.getValue();
-					String gistCodeBlockId = gistLink.replace( "https://gist.github.com/", "" );
-					GistCodeHandler.deleteGist( gistCodeBlockId );
-				}
+			Map< String, String > idToGistLinkMap = FileHandler.readFileToMap( path );
+			for (Map.Entry< String, String > entry : idToGistLinkMap.entrySet()) {
+				String gistLink = entry.getValue();
+				String gistCodeBlockId = gistLink.replace( "https://gist.github.com/", "" );
+				GistCodeHandler.deleteGist( gistCodeBlockId );
 			}
 		}
 	}
