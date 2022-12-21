@@ -24,6 +24,16 @@ git clone https://github.com/ivanyu199012/BlogPublisher_Java_Public.git
 
 - Open the project in Eclipse
 
+- Input the tokens in tokens.properties
+
+	tokens.properties
+	```properties
+	GITHUB_TOKEN=<enter your github token here>
+	DEV_TO_TOKEN=<enter your dev to api key here>
+	MEDIUM_TOKEN=<enter your medium token here>
+	```
+
+
 ## Test
 - Click Maven test
 ![](img/mavenTest.png)
