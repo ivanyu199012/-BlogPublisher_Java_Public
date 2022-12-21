@@ -3,6 +3,7 @@
 
 <!-- omit in toc -->
 ## Detail Guide
+Input blog Link here
 
 <!-- omit in toc -->
 ## Table of Contents
