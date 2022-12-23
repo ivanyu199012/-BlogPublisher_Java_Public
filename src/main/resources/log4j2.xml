@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN" monitorInterval="30">
+<Configuration status="INFO">
 	<Properties>
-		<Property name="LOG_PATTERN">[%p] %d{yyyy-MM-dd HH:mm:ss}, %m%n</Property>
+		<Property name="LOG_PATTERN">[%p] [%d] [%c{1}], %m%n</Property>
 		<Property name="APP_LOG_ROOT">log</Property>
 	</Properties>
 
@@ -12,13 +12,11 @@
 		<RollingFile name="flog"
 			fileName="${APP_LOG_ROOT}/app.log"
 			filePattern="${APP_LOG_ROOT}/app-%d{yyyy-MM-dd}-%i.log">
-			<LevelRangeFilter minLevel="INFO" maxLevel="INFO"
-				onMatch="ACCEPT" onMismatch="DENY" />
 			<PatternLayout pattern="${LOG_PATTERN}" />
 			<Policies>
 				<TimeBasedTriggeringPolicy interval="1" />
 			</Policies>
-			<DefaultRolloverStrategy max="10" />
+			<DefaultRolloverStrategy max="14" />
 		</RollingFile>
 	</Appenders>
 
