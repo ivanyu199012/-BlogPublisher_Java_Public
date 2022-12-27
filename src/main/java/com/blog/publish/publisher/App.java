@@ -79,20 +79,22 @@ public class App
 		BlogInfo blogInfo = App.getBlogInfoFrom( cmd );
 		String markdown = FileHandler.readFile( blogInfo.getFilepath() );
 
-		if( ! Utils.isNullOrEmpty( blogInfo.getSites() ) )
+		if( Utils.isNullOrEmpty( blogInfo.getSites() ) )
 		{
-			for( SITE site : blogInfo.getSites() )
+			return;
+		}
+		
+		for( SITE site : blogInfo.getSites() )
+		{
+			try
 			{
-				try
-				{
-					logger.info( "Started Uploading to " + site.name() );
-					siteToUploadArticleMap.get( site ).exec( blogInfo, markdown );
-					logger.info( "Finished Uploading to " + site.name() );
-				}
-				catch (Exception e)
-				{
-					logger.error( "Upload article to the site " + site.toString(), e );
-				}
+				logger.info( "Started Uploading to " + site.name() );
+				siteToUploadArticleMap.get( site ).exec( blogInfo, markdown );
+				logger.info( "Finished Uploading to " + site.name() );
+			}
+			catch (Exception e)
+			{
+				logger.error( "Upload article to the site " + site.toString(), e );
 			}
 		}
 	}
