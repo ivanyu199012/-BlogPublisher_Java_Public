@@ -3,7 +3,9 @@
 
 <!-- omit in toc -->
 ## Detail Guide
-- [Publish a local markdown file to sites at once by Java (Part 1)](https://ivanyu2021.hashnode.dev/publish-a-local-markdown-file-to-sites-at-once-by-java-part-1)
+- [Publish a local markdown file to sites at once by Java, Usage](https://ivanyu2021.hashnode.dev/publish-a-local-markdown-file-to-sites-at-once-by-java-usage)
+- [Publish a local markdown file to sites at once by Java, Configuration](https://ivanyu2021.hashnode.dev/publish-a-local-markdown-file-to-sites-at-once-by-java-configuration)
+- [Publish a local markdown file to sites at once by Java, Problem-Solving & Enhancement](https://ivanyu2021.hashnode.dev/publish-a-local-markdown-file-to-sites-at-once-by-java-problem-solving-enhancement)
 
 <!-- omit in toc -->
 ## Table of Contents
